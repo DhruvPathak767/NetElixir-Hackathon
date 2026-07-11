@@ -122,7 +122,7 @@ export default function AppLayout() {
                 AM
               </button>
               {profileOpen && (
-                <div className="glass" style={{ position: 'absolute', right: 0, top: 48, padding: 8, minWidth: 200, zIndex: 200, animation: 'scaleIn 0.2s var(--ease-out)' }}>
+                <div style={{ position: 'absolute', right: 0, top: 48, padding: 8, minWidth: 200, zIndex: 200, animation: 'scaleIn 0.2s var(--ease-out)', background: 'var(--bg-elevated)', borderRadius: 'var(--r-lg)', border: '1px solid var(--border-strong)', boxShadow: 'var(--shadow-lg)' }}>
                   <div style={{ padding: '8px 12px', borderBottom: '1px solid var(--border)', marginBottom: 4 }}>
                     <div style={{ fontWeight: 600, fontSize: 'var(--fs-sm)' }}>Alex Morgan</div>
                     <div style={{ fontSize: 'var(--fs-xs)', color: 'var(--text-muted)' }}>alex@forecastiq.io</div>
