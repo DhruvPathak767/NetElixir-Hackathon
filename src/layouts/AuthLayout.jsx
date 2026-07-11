@@ -47,27 +47,7 @@ export default function AuthLayout({ children, title, subtitle }) {
             </StaggerContainer>
           </div>
 
-          {/* Floating mock cards for visual interest */}
-          <motion.div 
-            className="data-badge b1"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4, type: 'spring' }}
-            style={{ top: '15%', right: '15%', left: 'auto', bottom: 'auto' }}
-          >
-            <BarChart3 size={16} color="var(--brand-400)" />
-            <span>ROAS 4.3x</span>
-          </motion.div>
-          <motion.div 
-            className="data-badge b2"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.6, type: 'spring' }}
-            style={{ bottom: '15%', left: '15%', right: 'auto', top: 'auto' }}
-          >
-            <Target size={16} color="var(--accent-400)" />
-            <span>+14.5% Revenue</span>
-          </motion.div>
+
         </div>
 
         {/* Form side */}
