@@ -62,7 +62,6 @@ export default function Login() {
       <div className="auth-divider">or continue with</div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button variant="secondary" fullWidth leftIcon={<svg width="16" height="16" viewBox="0 0 24 24"><path fill="#fff" d="M21.35 11.1H12v3.8h5.35c-.25 1.4-1.7 4.1-5.35 4.1A6.5 6.5 0 0 1 5.5 12 6.5 6.5 0 0 1 12 5.5c1.95 0 3.25.83 4 1.55l2.55-2.45C16.9 3.35 14.7 2.5 12 2.5A9.5 9.5 0 0 0 2.5 12 9.5 9.5 0 0 0 12 21.5c5.4 0 9-3.8 9-9.15 0-.6-.05-1.05-.15-1.25z"/></svg>}>Google</Button>
-        <Button variant="secondary" fullWidth leftIcon={<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3C19 3 21 5 21 7.5c0 1.5-.7 2.8-1.7 3.7l-1 1c-.4.4-.6 1-.6 1.6v.2c0 1-.8 1.8-1.8 1.8h-3.4c-1 0-1.8-.8-1.8-1.8v-.2c0-.6-.2-1.2-.6-1.6l-1-1C7.7 10.3 7 9 7 7.5 7 5 9 3 11.5 3c.8 0 1.5.2 2.1.5.6-.3 1.3-.5 2.1-.5h.8z"/></svg>}>SSO</Button>
       </div>
       <p className="auth-toggle-link">
         Don't have an account? <Link to="/signup">Sign up free</Link>

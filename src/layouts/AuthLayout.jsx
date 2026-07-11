@@ -53,6 +53,7 @@ export default function AuthLayout({ children, title, subtitle }) {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.4, type: 'spring' }}
+            style={{ left: '10%', top: '15%', right: 'auto', bottom: 'auto' }}
           >
             <BarChart3 size={16} color="var(--brand-400)" />
             <span>ROAS 4.3x</span>
@@ -62,6 +63,7 @@ export default function AuthLayout({ children, title, subtitle }) {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.6, type: 'spring' }}
+            style={{ right: '10%', top: '35%', left: 'auto', bottom: 'auto' }}
           >
             <Target size={16} color="var(--accent-400)" />
             <span>+14.5% Revenue</span>
