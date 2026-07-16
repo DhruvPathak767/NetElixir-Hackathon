@@ -1,0 +1,52 @@
+# Backend venv
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+backend/.venv/
+backend/venv/
+backend/__pycache__/
+
+# Frontend Node modules and dist
+node_modules/
+dist/
+dist-ssr/
+*.local
+frontend/node_modules/
+frontend/dist/
+
+# Env config files
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+
+# Local databases and runtime stores
+*.db
+*.sqlite
+*.sqlite3
+backend/forecastiq.db
+backend/uploads/
+backend/processed/
+backend/models/
+backend/reports/
+uploads/
+processed/
+models/
+reports/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

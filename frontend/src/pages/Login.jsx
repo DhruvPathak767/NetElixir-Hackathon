@@ -1,0 +1,135 @@
+import { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import AuthLayout from '../layouts/AuthLayout.jsx';
+import Button from '../components/Button.jsx';
+import { useToast } from '../components/Toast.jsx';
+import { StaggerContainer, StaggerItem } from '../components/StaggerContainer.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
+
+export default function Login() {
+  const toast = useToast();
+  const navigate = useNavigate();
+  const { login, isAuthenticated, loginWithGoogle } = useAuth();
+  
+  const [email, setEmail] = useState(() => localStorage.getItem('fiq-remember-email') || '');
+  const [password, setPassword] = useState('');
+  const [showPw, setShowPw] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [authStatusMessage, setAuthStatusMessage] = useState('');
+  const [rememberMe, setRememberMe] = useState(() => !!localStorage.getItem('fiq-remember-email'));
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/app/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    const code = query.get('code');
+    const state = query.get('state');
+    
+    if (code) {
+      const exchangeCode = async () => {
+        setLoading(true);
+        setAuthStatusMessage('Signing in with Google...');
+        try {
+          await loginWithGoogle(code, state);
+          toast.success('Welcome back to ForecastIQ!');
+          navigate('/app/dashboard');
+        } catch (error) {
+          toast.error(error.message || 'Google login failed. Please try again.');
+          navigate('/login', { replace: true });
+        } finally {
+          setLoading(false);
+          setAuthStatusMessage('');
+        }
+      };
+      exchangeCode();
+    }
+  }, [navigate, loginWithGoogle, toast]);
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'}/auth/google/login`;
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (!email || !password) return toast.warning('Please fill in all fields');
+    setLoading(true);
+    try {
+      await login(email, password, rememberMe);
+      
+      // Save or clear remembered email
+      if (rememberMe) {
+        localStorage.setItem('fiq-remember-email', email);
+      } else {
+        localStorage.removeItem('fiq-remember-email');
+      }
+      
+      toast.success('Welcome back to ForecastIQ!');
+      navigate('/app/dashboard');
+    } catch (error) {
+      toast.error(error.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <AuthLayout 
+      title={authStatusMessage || "Welcome back"} 
+      subtitle={authStatusMessage ? "Please wait while we establish your secure session" : "Sign in to your ForecastIQ account"}
+    >
+      {authStatusMessage ? (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, padding: '32px 0' }}>
+          <div className="btn-spinner" style={{ width: 32, height: 32, borderWidth: 3, borderColor: 'var(--brand-500) transparent transparent transparent' }} />
+          <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--fs-sm)' }}>Connecting to secure servers...</p>
+        </div>
+      ) : (
+        <>
+          <form onSubmit={onSubmit}>
+            <StaggerContainer style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <StaggerItem className="input-group">
+                <label className="input-label">Email</label>
+                <div className="input-wrap">
+                  <Mail size={16} />
+                  <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" />
+                </div>
+              </StaggerItem>
+              <StaggerItem className="input-group">
+                <label className="input-label">Password</label>
+                <div className="input-wrap">
+                  <Lock size={16} />
+                  <input className="input" type={showPw ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
+                  <button type="button" onClick={() => setShowPw((s) => !s)} style={{ position: 'absolute', right: 12, color: 'var(--text-muted)' }} aria-label="Toggle password">
+                    {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </StaggerItem>
+              <StaggerItem style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 'var(--fs-sm)' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-secondary)', cursor: 'pointer' }}>
+                  <input type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} style={{ accentColor: 'var(--brand-500)' }} /> Remember me
+                </label>
+                <Link to="/forgot-password" style={{ color: 'var(--brand-400)', fontWeight: 500 }}>Forgot password?</Link>
+              </StaggerItem>
+              <StaggerItem>
+                <Button type="submit" fullWidth size="lg" loading={loading} rightIcon={<ArrowRight size={18} />}>
+                  Sign in
+                </Button>
+              </StaggerItem>
+            </StaggerContainer>
+          </form>
+          <div className="auth-divider">or continue with</div>
+          <div style={{ display: 'flex', gap: 10 }}>
+            <Button onClick={handleGoogleLogin} variant="secondary" fullWidth leftIcon={<svg width="16" height="16" viewBox="0 0 24 24"><path fill="#fff" d="M21.35 11.1H12v3.8h5.35c-.25 1.4-1.7 4.1-5.35 4.1A6.5 6.5 0 0 1 5.5 12 6.5 6.5 0 0 1 12 5.5c1.95 0 3.25.83 4 1.55l2.55-2.45C16.9 3.35 14.7 2.5 12 2.5A9.5 9.5 0 0 0 2.5 12 9.5 9.5 0 0 0 12 21.5c5.4 0 9-3.8 9-9.15 0-.6-.05-1.05-.15-1.25z"/></svg>}>Google</Button>
+          </div>
+          <p className="auth-toggle-link">
+            Don't have an account? <Link to="/signup">Sign up free</Link>
+          </p>
+        </>
+      )}
+    </AuthLayout>
+  );
+}
