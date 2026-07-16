@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastProvider } from './components/Toast.jsx';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
@@ -28,7 +29,7 @@ import Terms from './pages/Terms.jsx';
 import Privacy from './pages/Privacy.jsx';
 
 
-function ProtectedRoute({ children }) {
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading } = useAuth();
   
   if (loading) {
