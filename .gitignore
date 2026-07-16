@@ -1,3 +1,12 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
 # Backend venv
 .venv/
 venv/
@@ -10,8 +19,11 @@ backend/__pycache__/
 
 # Frontend Node modules and dist
 node_modules/
+node_modules
 dist/
+dist
 dist-ssr/
+dist-ssr
 *.local
 frontend/node_modules/
 frontend/dist/
@@ -37,16 +49,16 @@ processed/
 models/
 reports/
 
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
 # IDE and OS files
 .vscode/
+.vscode/*
+!.vscode/extensions.json
 .idea/
+.idea
 .DS_Store
 Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

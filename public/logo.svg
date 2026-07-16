@@ -1,0 +1,42 @@
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ForecastIQ logo">
+  <defs>
+    <linearGradient id="fiqGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#22d3ee" />
+      <stop offset="55%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <linearGradient id="fiqGradSoft" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#67e8f9" />
+      <stop offset="100%" stop-color="#34d399" />
+    </linearGradient>
+    <filter id="fiqGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="b" />
+      <feMerge>
+        <feMergeNode in="b" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <circle cx="50" cy="50" r="44" stroke="url(#fiqGrad)" stroke-width="2.5" opacity="0.35" />
+
+  <g style="transform-origin: 50px 50px">
+    <circle cx="50" cy="50" r="36" stroke="url(#fiqGradSoft)" stroke-width="1.5" stroke-dasharray="4 8" opacity="0.5" />
+  </g>
+
+  <g stroke="url(#fiqGrad)" stroke-width="2" stroke-linecap="round" opacity="0.55">
+    <line x1="50" y1="22" x2="50" y2="50" />
+    <line x1="50" y1="50" x2="26" y2="68" />
+    <line x1="50" y1="50" x2="74" y2="68" />
+    <line x1="26" y1="68" x2="74" y2="68" />
+  </g>
+
+  <g filter="url(#fiqGlow)">
+    <circle cx="50" cy="22" r="6" fill="url(#fiqGrad)" />
+    <circle cx="50" cy="50" r="8" fill="url(#fiqGrad)" />
+    <circle cx="26" cy="68" r="5" fill="url(#fiqGradSoft)" />
+    <circle cx="74" cy="68" r="5" fill="url(#fiqGradSoft)" />
+  </g>
+
+  <circle cx="50" cy="50" r="3" fill="#fff" />
+</svg>
