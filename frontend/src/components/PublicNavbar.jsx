@@ -42,7 +42,7 @@ export default function PublicNavbar() {
     <>
       <nav className={`pub-navbar ${scrolled ? 'scrolled' : ''}`}>
         <Link to="/" className="pub-nav-brand">
-          <Logo size={34} animated />
+          <Logo size={42} animated />
         </Link>
         <div className="pub-nav-links">
           {LINKS.map((l) => (

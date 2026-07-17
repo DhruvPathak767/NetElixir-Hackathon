@@ -81,7 +81,7 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
     
     # CORS Origins
-    ALLOWED_ORIGINS: Union[str, List[str]] = ["http://localhost:5173", "http://127.0.0.1:5173"]
+    ALLOWED_ORIGINS: Union[str, List[str]] = ["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5174", "http://127.0.0.1:5174"]
 
     @field_validator("ALLOWED_ORIGINS", mode="before")
     @classmethod

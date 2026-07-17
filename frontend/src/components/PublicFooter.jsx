@@ -38,7 +38,7 @@ export default function PublicFooter() {
       <div className="pub-footer-inner">
         <div className="pub-footer-grid">
           <div className="pub-footer-col">
-            <Logo size={36} animated />
+            <Logo size={44} animated />
             <p className="pub-footer-brand-desc">
               AI-powered marketing spend optimization. Forecast revenue, simulate budgets, and let AI surface the opportunities that matter.
             </p>

@@ -79,7 +79,7 @@ export default function AppLayout() {
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
         <div className="sidebar-brand">
-          <Logo size={34} animated textClassName="fiq-logo-text" />
+          <Logo size={40} animated textClassName="fiq-logo-text" />
         </div>
         <nav className="sidebar-nav">
           {NAV_ITEMS.map((item) => {

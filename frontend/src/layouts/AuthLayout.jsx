@@ -20,7 +20,7 @@ export default function AuthLayout({ children, title, subtitle }) {
         <div className="auth-visual">
           <div className="auth-visual-content">
             <div style={{ marginBottom: 28 }}>
-              <Logo size={56} animated withText={false} />
+              <Logo size={72} animated withText={false} />
             </div>
             <h2>
               Forecast smarter.<br />
@@ -54,7 +54,7 @@ export default function AuthLayout({ children, title, subtitle }) {
         <div className="auth-form-side">
           <div className="auth-form-wrap">
             <div className="auth-logo-row">
-              <Logo size={48} animated withText={false} />
+              <Logo size={60} animated withText={false} />
             </div>
             <h1 className="auth-title">{title}</h1>
             <p className="auth-subtitle">{subtitle}</p>
