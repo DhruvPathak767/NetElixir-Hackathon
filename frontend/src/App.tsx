@@ -27,6 +27,8 @@ import Settings from './pages/Settings.jsx';
 import Landing from './pages/Landing.jsx';
 import Terms from './pages/Terms.jsx';
 import Privacy from './pages/Privacy.jsx';
+import ChannelAnalytics from './pages/ChannelAnalytics.jsx';
+import NotFound from './pages/NotFound.jsx';
 
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -73,15 +75,18 @@ export default function App() {
               <Route path="model-training" element={<ModelTraining />} />
               <Route path="forecast" element={<Forecast />} />
               <Route path="budget-simulator" element={<BudgetSimulator />} />
+              <Route path="scenario-comparison" element={<BudgetSimulator />} />
               <Route path="ai-insights" element={<AIInsights />} />
               <Route path="ai-chat" element={<AIChat />} />
               <Route path="recommendation-history" element={<RecommendationHistory />} />
+              <Route path="channel-analytics" element={<ChannelAnalytics />} />
               <Route path="reports" element={<Reports />} />
               <Route path="model-monitor" element={<ModelMonitor />} />
               <Route path="system-health" element={<SystemHealth />} />
               <Route path="settings" element={<Settings />} />
             </Route>
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="/404" element={<NotFound />} />
+            <Route path="*" element={<Navigate to="/404" replace />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

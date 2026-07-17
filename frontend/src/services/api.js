@@ -8,8 +8,6 @@
 import { CHANNELS } from '../constants/index.js';
 import axiosClient from './axios.js';
 
-const delay = (ms = 600) => new Promise((r) => setTimeout(r, ms));
-
 /* ---------- Dashboard ---------- */
 export async function getDashboardSummary() {
   const res = await axiosClient.get('/dashboard');

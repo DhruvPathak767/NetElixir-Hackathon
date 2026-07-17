@@ -6,7 +6,7 @@
  *   - Tab 2: Budget Optimizer (POST /optimize-budget) with total budget scaling, baseline vs optimized comparisons, alternative recommend tables, and channel insights.
  */
 import { useState, useEffect, useMemo, useCallback, memo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell,
@@ -1101,7 +1101,19 @@ const OptimizerTab = memo(function OptimizerTab({
    ═══════════════════════════════════════════════════════════ */
 export default function BudgetSimulator() {
   const toast = useToast();
-  const [tab, setTab] = useState(0);
+  const location = useLocation();
+  const initialTab = useMemo(() => {
+    return location.pathname.includes('scenario-comparison') ? 1 : 0;
+  }, [location.pathname]);
+  const [tab, setTab] = useState(initialTab);
+
+  useEffect(() => {
+    if (location.pathname.includes('scenario-comparison')) {
+      setTab(1);
+    } else if (location.pathname.includes('budget-simulator')) {
+      setTab(0);
+    }
+  }, [location.pathname]);
   const [availableChannels, setAvailableChannels] = useState(['Google_Spend', 'Meta_Spend', 'Microsoft_Spend']);
   const [channelsLoading, setChannelsLoading] = useState(true);
   const [hasDataset, setHasDataset] = useState(true);
