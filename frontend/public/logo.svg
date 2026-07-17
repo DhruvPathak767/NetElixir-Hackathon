@@ -1,14 +1,22 @@
 <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ForecastIQ logo">
   <defs>
+    <!-- Primary cyan-to-green gradient -->
     <linearGradient id="fiqGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#22d3ee" />
       <stop offset="55%" stop-color="#06b6d4" />
       <stop offset="100%" stop-color="#10b981" />
     </linearGradient>
+    <!-- Softer gradient for accents -->
     <linearGradient id="fiqGradSoft" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#67e8f9" />
       <stop offset="100%" stop-color="#34d399" />
     </linearGradient>
+    <!-- Vertical bar gradient -->
+    <linearGradient id="barGrad" x1="0" y1="80" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#22d3ee" />
+    </linearGradient>
+    <!-- Glow filter -->
     <filter id="fiqGlow" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="2.5" result="b" />
       <feMerge>
@@ -16,27 +24,79 @@
         <feMergeNode in="SourceGraphic" />
       </feMerge>
     </filter>
+    <!-- Outer glow for hexagon -->
+    <filter id="hexGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="g" />
+      <feMerge>
+        <feMergeNode in="g" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
   </defs>
 
-  <circle cx="50" cy="50" r="44" stroke="url(#fiqGrad)" stroke-width="2.5" opacity="0.35" />
+  <!-- Hexagon outline -->
+  <polygon
+    points="50,8 88,27 88,73 50,92 12,73 12,27"
+    stroke="url(#fiqGrad)"
+    stroke-width="2"
+    fill="none"
+    opacity="0.6"
+    filter="url(#hexGlow)"
+  />
 
-  <g style="transform-origin: 50px 50px">
-    <circle cx="50" cy="50" r="36" stroke="url(#fiqGradSoft)" stroke-width="1.5" stroke-dasharray="4 8" opacity="0.5" />
+  <!-- Inner hexagon fill (subtle) -->
+  <polygon
+    points="50,14 82,30 82,70 50,86 18,70 18,30"
+    fill="url(#fiqGrad)"
+    opacity="0.06"
+  />
+
+  <!-- "F" letter -->
+  <text
+    x="26"
+    y="62"
+    font-family="'Inter','Segoe UI','Helvetica Neue',Arial,sans-serif"
+    font-weight="800"
+    font-size="36"
+    fill="url(#fiqGrad)"
+    filter="url(#fiqGlow)"
+  >F</text>
+
+  <!-- Bar chart: 4 rising bars -->
+  <g opacity="0.85">
+    <rect x="54" y="62" width="5" height="12" rx="1" fill="url(#barGrad)" />
+    <rect x="61" y="55" width="5" height="19" rx="1" fill="url(#barGrad)" />
+    <rect x="68" y="47" width="5" height="27" rx="1" fill="url(#barGrad)" />
+    <rect x="75" y="40" width="5" height="34" rx="1" fill="url(#fiqGrad)" />
   </g>
 
-  <g stroke="url(#fiqGrad)" stroke-width="2" stroke-linecap="round" opacity="0.55">
-    <line x1="50" y1="22" x2="50" y2="50" />
-    <line x1="50" y1="50" x2="26" y2="68" />
-    <line x1="50" y1="50" x2="74" y2="68" />
-    <line x1="26" y1="68" x2="74" y2="68" />
+  <!-- Trend line with data points -->
+  <polyline
+    points="46,58 56,52 63,46 70,38 77,30"
+    stroke="url(#fiqGradSoft)"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+    filter="url(#fiqGlow)"
+  />
+  <!-- Data-point dots on trend line -->
+  <g fill="url(#fiqGradSoft)" filter="url(#fiqGlow)">
+    <circle cx="56" cy="52" r="2.5" />
+    <circle cx="63" cy="46" r="2.5" />
+    <circle cx="70" cy="38" r="2.5" />
+    <circle cx="77" cy="30" r="3" fill="#fff" />
   </g>
 
-  <g filter="url(#fiqGlow)">
-    <circle cx="50" cy="22" r="6" fill="url(#fiqGrad)" />
-    <circle cx="50" cy="50" r="8" fill="url(#fiqGrad)" />
-    <circle cx="26" cy="68" r="5" fill="url(#fiqGradSoft)" />
-    <circle cx="74" cy="68" r="5" fill="url(#fiqGradSoft)" />
-  </g>
+  <!-- Floating sparkle particles -->
+  <circle cx="20" cy="18" r="1" fill="#22d3ee" opacity="0.5" />
+  <circle cx="82" cy="22" r="0.8" fill="#34d399" opacity="0.4" />
+  <circle cx="15" cy="55" r="0.7" fill="#67e8f9" opacity="0.35" />
+  <circle cx="86" cy="60" r="1" fill="#22d3ee" opacity="0.45" />
+  <circle cx="35" cy="12" r="0.6" fill="#10b981" opacity="0.3" />
+  <circle cx="70" cy="90" r="0.8" fill="#06b6d4" opacity="0.35" />
 
-  <circle cx="50" cy="50" r="3" fill="#fff" />
+  <!-- Ground ripple ellipses -->
+  <ellipse cx="50" cy="94" rx="28" ry="3" stroke="url(#fiqGradSoft)" stroke-width="0.6" fill="none" opacity="0.2" />
+  <ellipse cx="50" cy="94" rx="20" ry="2" stroke="url(#fiqGradSoft)" stroke-width="0.4" fill="none" opacity="0.15" />
 </svg>

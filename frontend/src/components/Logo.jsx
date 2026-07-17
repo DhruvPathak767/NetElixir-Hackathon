@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 
 /**
  * ForecastIQ — Live animated logo.
- * SVG-based neural-node mark with pulsing synapses and a scanning wave.
- * Pure CSS animation, no external deps. Scales via `size` prop.
+ * Hexagonal mark with "F" letter, bar chart, and rising trend line.
+ * CSS-only animations with dark/light theme support. Scales via `size` prop.
  */
 export default function Logo({ size = 36, animated = true, withText = true, textClassName = '' }) {
   return (
@@ -18,15 +18,23 @@ export default function Logo({ size = 36, animated = true, withText = true, text
           aria-label="ForecastIQ logo"
         >
           <defs>
+            {/* Primary cyan-to-green gradient */}
             <linearGradient id="fiqGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stopColor="#22d3ee" />
               <stop offset="55%" stopColor="#06b6d4" />
               <stop offset="100%" stopColor="#10b981" />
             </linearGradient>
+            {/* Softer gradient for accents */}
             <linearGradient id="fiqGradSoft" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stopColor="#67e8f9" />
               <stop offset="100%" stopColor="#34d399" />
             </linearGradient>
+            {/* Vertical bar gradient */}
+            <linearGradient id="fiqBarGrad" x1="0" y1="80" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#06b6d4" />
+              <stop offset="100%" stopColor="#22d3ee" />
+            </linearGradient>
+            {/* Glow filter */}
             <filter id="fiqGlow" x="-50%" y="-50%" width="200%" height="200%">
               <feGaussianBlur stdDeviation="2.5" result="b" />
               <feMerge>
@@ -34,57 +42,94 @@ export default function Logo({ size = 36, animated = true, withText = true, text
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
+            {/* Outer glow for hexagon */}
+            <filter id="fiqHexGlow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="4" result="g" />
+              <feMerge>
+                <feMergeNode in="g" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
           </defs>
 
-          {/* Outer ring */}
-          <circle
-            cx="50" cy="50" r="44"
+          {/* Hexagon outline with glow */}
+          <polygon
+            points="50,8 88,27 88,73 50,92 12,73 12,27"
             stroke="url(#fiqGrad)"
-            strokeWidth="2.5"
-            opacity="0.35"
-            className={animated ? 'fiq-ring' : ''}
+            strokeWidth="2"
+            fill="none"
+            opacity="0.6"
+            filter="url(#fiqHexGlow)"
+            className={animated ? 'fiq-hex-pulse' : ''}
           />
 
-          {/* Rotating dashed orbit */}
-          <g className={animated ? 'fiq-orbit' : ''} style={{ transformOrigin: '50px 50px' }}>
-            <circle
-              cx="50" cy="50" r="36"
-              stroke="url(#fiqGradSoft)"
-              strokeWidth="1.5"
-              strokeDasharray="4 8"
-              opacity="0.5"
-            />
+          {/* Inner hexagon subtle fill */}
+          <polygon
+            points="50,14 82,30 82,70 50,86 18,70 18,30"
+            fill="url(#fiqGrad)"
+            opacity="0.06"
+            className={animated ? 'fiq-hex-fill' : ''}
+          />
+
+          {/* "F" letter */}
+          <text
+            x="26"
+            y="62"
+            fontFamily="'Inter','Segoe UI','Helvetica Neue',Arial,sans-serif"
+            fontWeight="800"
+            fontSize="36"
+            fill="url(#fiqGrad)"
+            filter="url(#fiqGlow)"
+            className={animated ? 'fiq-letter' : ''}
+          >F</text>
+
+          {/* Bar chart: 4 rising bars */}
+          <g opacity="0.85">
+            <rect x="54" y="62" width="5" height="12" rx="1" fill="url(#fiqBarGrad)" className={animated ? 'fiq-bar fiq-bar1' : ''} />
+            <rect x="61" y="55" width="5" height="19" rx="1" fill="url(#fiqBarGrad)" className={animated ? 'fiq-bar fiq-bar2' : ''} />
+            <rect x="68" y="47" width="5" height="27" rx="1" fill="url(#fiqBarGrad)" className={animated ? 'fiq-bar fiq-bar3' : ''} />
+            <rect x="75" y="40" width="5" height="34" rx="1" fill="url(#fiqGrad)" className={animated ? 'fiq-bar fiq-bar4' : ''} />
           </g>
 
-          {/* Scanning wave line */}
+          {/* Trend line */}
+          <polyline
+            points="46,58 56,52 63,46 70,38 77,30"
+            stroke="url(#fiqGradSoft)"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+            filter="url(#fiqGlow)"
+            className={animated ? 'fiq-trend-line' : ''}
+          />
+
+          {/* Data-point dots */}
+          <g fill="url(#fiqGradSoft)" filter="url(#fiqGlow)">
+            <circle cx="56" cy="52" r="2.5" className={animated ? 'fiq-dot fiq-dot1' : ''} />
+            <circle cx="63" cy="46" r="2.5" className={animated ? 'fiq-dot fiq-dot2' : ''} />
+            <circle cx="70" cy="38" r="2.5" className={animated ? 'fiq-dot fiq-dot3' : ''} />
+            <circle cx="77" cy="30" r="3" fill="#fff" className={animated ? 'fiq-dot fiq-dot4' : ''} />
+          </g>
+
+          {/* Floating sparkle particles */}
           {animated && (
-            <line
-              x1="14" y1="50" x2="86" y2="50"
-              stroke="url(#fiqGrad)"
-              strokeWidth="1.5"
-              opacity="0.25"
-              className="fiq-scan"
-            />
+            <g>
+              <circle cx="20" cy="18" r="1" fill="#22d3ee" className="fiq-sparkle fiq-sp1" />
+              <circle cx="82" cy="22" r="0.8" fill="#34d399" className="fiq-sparkle fiq-sp2" />
+              <circle cx="15" cy="55" r="0.7" fill="#67e8f9" className="fiq-sparkle fiq-sp3" />
+              <circle cx="86" cy="60" r="1" fill="#22d3ee" className="fiq-sparkle fiq-sp4" />
+              <circle cx="35" cy="12" r="0.6" fill="#10b981" className="fiq-sparkle fiq-sp5" />
+              <circle cx="70" cy="90" r="0.8" fill="#06b6d4" className="fiq-sparkle fiq-sp6" />
+            </g>
           )}
 
-          {/* Neural connections */}
-          <g stroke="url(#fiqGrad)" strokeWidth="2" strokeLinecap="round" opacity="0.55">
-            <line x1="50" y1="22" x2="50" y2="50" className={animated ? 'fiq-line fiq-l1' : ''} />
-            <line x1="50" y1="50" x2="26" y2="68" className={animated ? 'fiq-line fiq-l2' : ''} />
-            <line x1="50" y1="50" x2="74" y2="68" className={animated ? 'fiq-line fiq-l3' : ''} />
-            <line x1="26" y1="68" x2="74" y2="68" className={animated ? 'fiq-line fiq-l4' : ''} />
-          </g>
-
-          {/* Nodes */}
-          <g filter="url(#fiqGlow)">
-            <circle cx="50" cy="22" r="6" fill="url(#fiqGrad)" className={animated ? 'fiq-node fiq-n1' : ''} />
-            <circle cx="50" cy="50" r="8" fill="url(#fiqGrad)" className={animated ? 'fiq-node fiq-n0' : ''} />
-            <circle cx="26" cy="68" r="5" fill="url(#fiqGradSoft)" className={animated ? 'fiq-node fiq-n2' : ''} />
-            <circle cx="74" cy="68" r="5" fill="url(#fiqGradSoft)" className={animated ? 'fiq-node fiq-n3' : ''} />
-          </g>
-
-          {/* Center pulse */}
-          {animated && <circle cx="50" cy="50" r="3" fill="#fff" className="fiq-core" />}
+          {/* Ground ripple ellipses */}
+          {animated && (
+            <g>
+              <ellipse cx="50" cy="94" rx="28" ry="3" stroke="url(#fiqGradSoft)" strokeWidth="0.6" fill="none" className="fiq-ripple fiq-rip1" />
+              <ellipse cx="50" cy="94" rx="20" ry="2" stroke="url(#fiqGradSoft)" strokeWidth="0.4" fill="none" className="fiq-ripple fiq-rip2" />
+            </g>
+          )}
         </svg>
       </span>
       {withText && (
@@ -106,41 +151,125 @@ const styleSheet = `
   color: var(--text-primary);
   white-space: nowrap;
 }
-.fiq-ring { transform-origin: 50px 50px; animation: fiqRingPulse 3s ease-in-out infinite; }
-@keyframes fiqRingPulse {
-  0%,100% { opacity: 0.35; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.04); }
+
+/* ── Hexagon pulse ── */
+.fiq-hex-pulse {
+  animation: fiqHexPulse 3s ease-in-out infinite;
 }
-.fiq-orbit { animation: fiqSpin 14s linear infinite; }
-@keyframes fiqSpin { to { transform: rotate(360deg); } }
-.fiq-scan { animation: fiqScan 2.4s ease-in-out infinite; transform-origin: 50px 50px; }
-@keyframes fiqScan {
-  0%,100% { transform: rotate(-12deg); opacity: 0.15; }
-  50% { transform: rotate(12deg); opacity: 0.4; }
+@keyframes fiqHexPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.85; }
 }
-.fiq-line { stroke-dasharray: 40; stroke-dashoffset: 40; animation: fiqLineDraw 2s ease forwards; }
-.fiq-l1 { animation-delay: 0.1s; }
-.fiq-l2 { animation-delay: 0.3s; }
-.fiq-l3 { animation-delay: 0.5s; }
-.fiq-l4 { animation-delay: 0.7s; }
-@keyframes fiqLineDraw { to { stroke-dashoffset: 0; } }
-.fiq-node { transform-origin: center; animation: fiqNodePulse 2.5s ease-in-out infinite; }
-.fiq-n0 { animation-delay: 0s; }
-.fiq-n1 { animation-delay: 0.3s; }
-.fiq-n2 { animation-delay: 0.6s; }
-.fiq-n3 { animation-delay: 0.9s; }
-@keyframes fiqNodePulse {
-  0%,100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.25); opacity: 0.8; }
+
+.fiq-hex-fill {
+  animation: fiqHexFillPulse 3s ease-in-out infinite;
 }
-.fiq-core { animation: fiqCorePulse 1.6s ease-in-out infinite; transform-origin: 50px 50px; }
-@keyframes fiqCorePulse {
-  0%,100% { opacity: 0.9; transform: scale(1); }
-  50% { opacity: 0.3; transform: scale(1.6); }
+@keyframes fiqHexFillPulse {
+  0%, 100% { opacity: 0.04; }
+  50% { opacity: 0.1; }
 }
+
+/* ── Letter "F" shimmer ── */
+.fiq-letter {
+  animation: fiqLetterShimmer 2.5s ease-in-out infinite;
+}
+@keyframes fiqLetterShimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+
+/* ── Bar chart grow-in ── */
+.fiq-bar {
+  transform-origin: center bottom;
+  animation: fiqBarGrow 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+             fiqBarPulse 3s ease-in-out 1.2s infinite;
+  opacity: 0;
+  transform: scaleY(0);
+}
+.fiq-bar1 { animation-delay: 0.1s, 1.3s; }
+.fiq-bar2 { animation-delay: 0.25s, 1.45s; }
+.fiq-bar3 { animation-delay: 0.4s, 1.6s; }
+.fiq-bar4 { animation-delay: 0.55s, 1.75s; }
+
+@keyframes fiqBarGrow {
+  to { opacity: 0.85; transform: scaleY(1); }
+}
+@keyframes fiqBarPulse {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.06); }
+}
+
+/* ── Trend line draw ── */
+.fiq-trend-line {
+  stroke-dasharray: 80;
+  stroke-dashoffset: 80;
+  animation: fiqTrendDraw 1.5s ease-out 0.3s forwards;
+}
+@keyframes fiqTrendDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ── Data dots pop in ── */
+.fiq-dot {
+  transform-origin: center;
+  opacity: 0;
+  transform: scale(0);
+  animation: fiqDotPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+             fiqDotPulse 2.5s ease-in-out 1.5s infinite;
+}
+.fiq-dot1 { animation-delay: 0.8s, 2.0s; }
+.fiq-dot2 { animation-delay: 1.0s, 2.2s; }
+.fiq-dot3 { animation-delay: 1.2s, 2.4s; }
+.fiq-dot4 { animation-delay: 1.4s, 2.6s; }
+
+@keyframes fiqDotPop {
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes fiqDotPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+}
+
+/* ── Sparkle particles float ── */
+.fiq-sparkle {
+  animation: fiqSparkle 3s ease-in-out infinite;
+}
+.fiq-sp1 { animation-delay: 0s; }
+.fiq-sp2 { animation-delay: 0.5s; }
+.fiq-sp3 { animation-delay: 1.0s; }
+.fiq-sp4 { animation-delay: 1.5s; }
+.fiq-sp5 { animation-delay: 2.0s; }
+.fiq-sp6 { animation-delay: 2.5s; }
+
+@keyframes fiqSparkle {
+  0%, 100% { opacity: 0.15; transform: translateY(0) scale(0.6); }
+  50% { opacity: 0.7; transform: translateY(-3px) scale(1.3); }
+}
+
+/* ── Ground ripple ── */
+.fiq-ripple {
+  animation: fiqRipple 2.8s ease-in-out infinite;
+}
+.fiq-rip1 { animation-delay: 0s; }
+.fiq-rip2 { animation-delay: 0.4s; }
+
+@keyframes fiqRipple {
+  0%, 100% { opacity: 0.1; transform: scaleX(0.85); }
+  50% { opacity: 0.3; transform: scaleX(1.1); }
+}
+
+/* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
-  .fiq-ring,.fiq-orbit,.fiq-scan,.fiq-line,.fiq-node,.fiq-core { animation: none !important; }
-  .fiq-line { stroke-dashoffset: 0 !important; }
+  .fiq-hex-pulse, .fiq-hex-fill, .fiq-letter,
+  .fiq-bar, .fiq-trend-line, .fiq-dot,
+  .fiq-sparkle, .fiq-ripple {
+    animation: none !important;
+  }
+  .fiq-bar { opacity: 0.85 !important; transform: scaleY(1) !important; }
+  .fiq-trend-line { stroke-dashoffset: 0 !important; }
+  .fiq-dot { opacity: 1 !important; transform: scale(1) !important; }
+  .fiq-sparkle { opacity: 0.4 !important; }
+  .fiq-ripple { opacity: 0.15 !important; }
 }
 `;
 
