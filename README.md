@@ -26,7 +26,15 @@ Furthermore, ForecastIQ does not stop at predictions. It utilizes a custom **heu
 
 ## 🧠 How Our Model Works (System Architecture)
 
-Our system is designed as a modular, multi-engine pipeline. The following diagram illustrates the complex execution flow from data ingestion to executive reporting, mimicking an advanced agentic workflow to ensure highest accuracy.
+Our system is designed as a modular, multi-engine pipeline. The following architecture diagram illustrates the complete horizontal tech stack, from the frontend client down to the local file persistence layer.
+
+<div align="center">
+  <img src="./docs/architecture.png" alt="ForecastIQ Enterprise Architecture" />
+</div>
+
+### ML Pipeline Execution Flow (Mermaid View)
+
+The following diagram illustrates the complex execution flow from data ingestion to executive reporting, mimicking an advanced agentic workflow to ensure highest accuracy within the ML Core.
 
 ```mermaid
 graph TD
