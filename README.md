@@ -198,6 +198,36 @@ Export your entire forecast analysis into a formatted, boardroom-ready PDF docum
 
 To run the full visual application (beyond just the evaluation script), follow these steps:
 
+### 🔐 Environment Variables (Preventing Data Leaks)
+
+Before starting the backend, you must configure your environment variables. **Never commit your actual `.env` file to version control.** Our repository uses `.gitignore` to prevent data leaks.
+
+Create a new file named `.env` in the root of the project and copy the following template (replacing the placeholder values with your actual secrets):
+
+```env
+APP_NAME="Marketing Forecast API"
+APP_VERSION="1.0"
+
+# ForecastIQ Backend Configuration
+DATABASE_URL=sqlite:///./forecastiq.db
+SECRET_KEY=your_super_secret_key_here
+API_VERSION=v1
+ALLOWED_ORIGINS=["http://localhost:5173", "http://localhost:5174"]
+LOG_LEVEL=INFO
+
+# Google OAuth Configuration
+GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_REDIRECT_URI=http://localhost:5173/login
+
+# SMTP Email Configuration
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=your_email@gmail.com
+SMTP_PASSWORD=your_app_password
+FROM_EMAIL=your_email@gmail.com
+```
+
 ### Backend Setup (FastAPI)
 The backend manages the REST APIs, Authentication, ML pipeline execution, and database connections.
 
