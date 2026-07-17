@@ -359,8 +359,8 @@ export const PredictionTimeline = memo(function PredictionTimeline({
               />
               {pointResult && (
                 <>
-                  <Area type="monotone" dataKey="upper" stroke="none" fill="url(#fcGrad)" name="Upper bound" />
-                  <Area type="monotone" dataKey="lower" stroke="none" fill="var(--bg-surface)" name="Lower bound" />
+                  <Area type="monotone" dataKey="upper" stroke="none" fill="url(#fcGrad)" name="Upper bound" animationDuration={1200} animationEasing="ease-out" />
+                  <Area type="monotone" dataKey="lower" stroke="none" fill="var(--bg-surface)" name="Lower bound" animationDuration={1200} animationEasing="ease-out" />
                 </>
               )}
               <Line
@@ -368,6 +368,7 @@ export const PredictionTimeline = memo(function PredictionTimeline({
                 stroke="#10b981" strokeWidth={2.5}
                 dot={{ r: 2, fill: '#10b981' }}
                 name="Historical Actual"
+                animationDuration={1200} animationEasing="ease-out"
               />
               {pointResult && (
                 <Line
@@ -375,6 +376,7 @@ export const PredictionTimeline = memo(function PredictionTimeline({
                   stroke="#22d3ee" strokeWidth={2.5} strokeDasharray="6 4"
                   dot={{ r: 3, fill: '#22d3ee' }}
                   name="Campaign Forecast"
+                  animationDuration={1200} animationEasing="ease-out"
                 />
               )}
             </ComposedChart>

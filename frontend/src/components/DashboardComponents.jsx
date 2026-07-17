@@ -147,7 +147,7 @@ export function AnimatedMetricCard({ label, value, icon: Icon, delta, formatType
 ------------------------------------------------------- */
 export const InsightCard = memo(function InsightCard({ insights = [] }) {
   return (
-    <Card reveal padding="lg">
+    <Card hover reveal padding="lg">
       <div className="card-title" style={{ marginBottom: 16 }}>AI Business Insights</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {insights.map((insight, idx) => (
@@ -193,7 +193,7 @@ export const RecommendationCard = memo(function RecommendationCard({ recs = [] }
   };
 
   return (
-    <Card reveal padding="lg">
+    <Card hover reveal padding="lg">
       <div className="card-title" style={{ marginBottom: 16 }}>Key Recommendations</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {recs.map((item, idx) => (

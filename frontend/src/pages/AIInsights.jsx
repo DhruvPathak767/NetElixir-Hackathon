@@ -1052,12 +1052,18 @@ export default function AIInsights() {
                   padding: '11px 20px', display: 'flex', alignItems: 'center', gap: 7,
                   fontSize: 'var(--fs-sm)', fontWeight: isActive ? 700 : 500,
                   color: isActive ? 'var(--brand-400)' : 'var(--text-secondary)',
-                  borderBottom: isActive ? '2px solid var(--brand-400)' : '2px solid transparent',
-                  marginBottom: -1, background: 'none', border: 'none',
-                  borderBottomStyle: 'solid', cursor: 'pointer',
-                  transition: 'color 0.15s ease', whiteSpace: 'nowrap', flexShrink: 0,
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  transition: 'color 0.2s var(--ease)', whiteSpace: 'nowrap', flexShrink: 0,
+                  position: 'relative'
                 }}
               >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeTabInsights"
+                    style={{ position: 'absolute', bottom: -1, left: 0, right: 0, height: 2, background: 'var(--brand-400)', borderRadius: '2px 2px 0 0' }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                )}
                 <Icon size={14} />
                 {t.label}
                 {badge != null && (

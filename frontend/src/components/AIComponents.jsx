@@ -536,11 +536,22 @@ export function AIErrorCard({ title = 'AI Engine Error', message, onRetry }) {
    ============================================================ */
 export function AIEmptyState({ icon: Icon = BrainCircuit, title, desc, action }) {
   return (
-    <div className="empty-state" style={{ minHeight: '40vh' }}>
-      <div className="empty-state-icon"><Icon size={28} style={{ color: 'var(--brand-400)' }} /></div>
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.95 }} 
+      animate={{ opacity: 1, scale: 1 }} 
+      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      className="empty-state" style={{ minHeight: '40vh' }}
+    >
+      <motion.div 
+        className="empty-state-icon"
+        animate={{ scale: [1, 1.05, 1], opacity: [0.8, 1, 0.8] }}
+        transition={{ duration: 3, ease: 'easeInOut', repeat: Infinity }}
+      >
+        <Icon size={28} style={{ color: 'var(--brand-400)' }} />
+      </motion.div>
       <div className="empty-state-title">{title}</div>
       {desc && <div className="empty-state-desc">{desc}</div>}
       {action}
-    </div>
+    </motion.div>
   );
 }

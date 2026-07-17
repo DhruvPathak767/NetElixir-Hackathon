@@ -15,14 +15,14 @@ const COLS = [
   { title: 'Company', links: [
     { to: '/#about', label: 'About Us' },
     { to: '/#contact', label: 'Contact' },
-    { to: '/signup', label: 'Careers' },
-    { to: '/signup', label: 'Blog' },
+    { to: '/404', label: 'Careers' },
+    { to: '/404', label: 'Blog' },
   ]},
   { title: 'Resources', links: [
-    { to: '/#features', label: 'Documentation' },
-    { to: '/#features', label: 'API Reference' },
-    { to: '/#features', label: 'Help Center' },
-    { to: '/#features', label: 'Status' },
+    { to: '/docs', label: 'Documentation' },
+    { to: '/docs', label: 'API Reference' },
+    { to: '/support', label: 'Help Center' },
+    { to: '/support', label: 'Status' },
   ]},
 ];
 
@@ -58,7 +58,7 @@ export default function PublicFooter() {
           ))}
         </div>
         <div className="pub-footer-bottom">
-          <span className="pub-footer-copy">© 2025 ForecastIQ. All rights reserved.</span>
+          <span className="pub-footer-copy">© 2026 ForecastIQ. All rights reserved.</span>
           <div className="pub-footer-social">
             {SOCIAL.map((Icon, i) => (
               <a key={i} href="#" className="pub-social-btn" aria-label="Social"><Icon size={18} /></a>

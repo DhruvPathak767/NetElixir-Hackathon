@@ -120,6 +120,7 @@ export default function DatasetPreview() {
           <Card reveal padding="lg" style={{ height: '100%' }}>
             <div className="card-title" style={{ marginBottom: 12 }}>Dataset Schema</div>
             <div className="card-subtitle" style={{ marginBottom: 16 }}>Detected fields, pandas types, and categorization</div>
+
             <div style={{ maxHeight: 350, overflowY: 'auto', paddingRight: 4 }}>
               <table className="table">
                 <thead>
@@ -207,23 +208,43 @@ export default function DatasetPreview() {
       {/* Row preview table */}
       <StaggerItem>
         <Card reveal padding="lg">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, marginBottom: 16 }}>
             <div>
-              <div className="card-title">Dataset Row Explorer</div>
-              <div className="card-subtitle">Examine preview rows before training models</div>
+              <div className="card-title" style={{ marginBottom: 4 }}>Data Preview</div>
+              <div className="card-subtitle">Sample rows from the parsed dataset</div>
             </div>
-            
-            <div style={{ display: 'flex', gap: 6, background: 'var(--bg-surface-2)', padding: 4, borderRadius: 'var(--r-md)' }}>
-              <button onClick={() => setPreviewTab('first')} className={`btn btn-sm ${previewTab === 'first' ? 'btn-primary' : 'btn-ghost'}`} style={{ height: 32 }}>
-                First 10 Rows
-              </button>
-              <button onClick={() => setPreviewTab('last')} className={`btn btn-sm ${previewTab === 'last' ? 'btn-primary' : 'btn-ghost'}`} style={{ height: 32 }}>
-                Last 10 Rows
-              </button>
+            <div style={{ display: 'flex', borderBottom: '1px solid var(--border)', overflowX: 'auto' }}>
+              {[
+                { id: 'first', label: 'First 10 Rows' },
+                { id: 'last', label: 'Last 10 Rows' }
+              ].map(t => {
+                const isActive = previewTab === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => setPreviewTab(t.id)}
+                    style={{
+                      padding: '10px 20px',
+                      background: 'none', border: 'none',
+                      color: isActive ? 'var(--brand-400)' : 'var(--text-secondary)',
+                      fontWeight: isActive ? 600 : 500,
+                      cursor: 'pointer', transition: 'color 0.2s', position: 'relative'
+                    }}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeTabPreview"
+                        style={{ position: 'absolute', bottom: -1, left: 0, right: 0, height: 2, background: 'var(--brand-400)', borderRadius: '2px 2px 0 0' }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                      />
+                    )}
+                    {t.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
-
-          <div style={{ overflowX: 'auto' }}>
+          <div className="table-container" style={{ maxHeight: 400, overflow: 'auto' }}>
             <table className="table" style={{ whiteSpace: 'nowrap' }}>
               <thead>
                 <tr>

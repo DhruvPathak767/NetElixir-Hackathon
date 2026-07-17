@@ -54,3 +54,46 @@ export function PageLoader({ label = 'Loading…' }) {
     </div>
   );
 }
+
+export function TableSkeleton({ rows = 5 }) {
+  return (
+    <div className="table-responsive" style={{ opacity: 0.7 }}>
+      <table className="table">
+        <thead>
+          <tr>
+            <th><Skeleton height={16} width="80%" /></th>
+            <th><Skeleton height={16} width="60%" /></th>
+            <th><Skeleton height={16} width="90%" /></th>
+            <th><Skeleton height={16} width="50%" /></th>
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from({ length: rows }).map((_, i) => (
+            <tr key={i}>
+              <td><Skeleton height={20} /></td>
+              <td><Skeleton height={20} width="80%" /></td>
+              <td><Skeleton height={20} width="60%" /></td>
+              <td><Skeleton height={20} width="70%" /></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export function ChartSkeleton({ height = 300 }) {
+  return (
+    <div style={{ height, width: '100%', display: 'flex', alignItems: 'flex-end', gap: '2%', padding: '10px 0', opacity: 0.5 }}>
+      {Array.from({ length: 12 }).map((_, i) => (
+        <Skeleton 
+          key={i} 
+          width="6.3%" 
+          height={`${20 + Math.random() * 80}%`} 
+          rounded="sm" 
+          className="chart-bar-skeleton"
+        />
+      ))}
+    </div>
+  );
+}

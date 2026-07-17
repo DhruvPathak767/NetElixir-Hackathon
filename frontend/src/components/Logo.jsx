@@ -23,7 +23,7 @@ export default function Logo({ size = 36, animated = true, withText = true, text
   }, []);
 
   const isDark = theme === 'dark';
-  const logoSrc = isDark ? '/logo-dark.jpg' : '/logo-light.jpg';
+  const logoSrc = isDark ? '/logo-dark.png' : '/logo-light.png';
 
   return (
     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>

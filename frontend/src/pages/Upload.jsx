@@ -5,6 +5,7 @@ import Button from '../components/Button.jsx';
 import { useToast } from '../components/Toast.jsx';
 import { uploadFile, getDatasetPreview } from '../services/api.js';
 import { StaggerContainer, StaggerItem } from '../components/StaggerContainer.jsx';
+import confetti from 'canvas-confetti';
 
 export default function Upload() {
   const toast = useToast();
@@ -70,6 +71,19 @@ export default function Upload() {
         setUploaded(uploadDetails);
         localStorage.setItem('forecastiq_uploaded', JSON.stringify(uploadDetails));
         toast.success(`${file.name} uploaded successfully`);
+        
+        // Trigger success confetti
+        const duration = 2000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 999 };
+        const randomInRange = (min, max) => Math.random() * (max - min) + min;
+        const interval = setInterval(function() {
+          const timeLeft = animationEnd - Date.now();
+          if (timeLeft <= 0) return clearInterval(interval);
+          const particleCount = 50 * (timeLeft / duration);
+          confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+          confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+        }, 250);
       } else {
         throw new Error(res.message || 'Upload failed');
       }

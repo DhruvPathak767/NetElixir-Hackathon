@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Lenis from 'lenis';
 import { NavLink, useLocation, useNavigate, Outlet, Link } from 'react-router-dom';
 import * as Icons from 'lucide-react';
 import Logo from '../components/Logo.jsx';
@@ -42,6 +43,33 @@ export default function AppLayout() {
     navigate('/login');
   };
 
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      direction: 'vertical',
+      gestureDirection: 'vertical',
+      smooth: true,
+      mouseMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      infinite: false,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
 
   const pathnames = location.pathname.split('/').filter((x) => x);
   const breadcrumbs = pathnames.map((name, index) => {
@@ -78,9 +106,9 @@ export default function AppLayout() {
         animate={{ width: collapsed ? 'var(--sidebar-w-collapsed)' : 'var(--sidebar-w)' }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
-        <div className="sidebar-brand">
+        <Link to="/app/dashboard" className="sidebar-brand" style={{ display: 'flex', textDecoration: 'none' }}>
           <Logo size={40} animated textClassName="fiq-logo-text" />
-        </div>
+        </Link>
         <nav className="sidebar-nav">
           {NAV_ITEMS.map((item) => {
             const Icon = Icons[item.icon] || Icons.Circle;
@@ -156,20 +184,28 @@ export default function AppLayout() {
               <button className="avatar" onClick={() => setProfileOpen((o) => !o)} aria-label="Profile">
                 {getInitials(user?.full_name)}
               </button>
-              {profileOpen && (
-                <div style={{ position: 'absolute', right: 0, top: 48, padding: 8, minWidth: 200, zIndex: 200, animation: 'scaleIn 0.2s var(--ease-out)', background: 'var(--bg-elevated)', borderRadius: 'var(--r-lg)', border: '1px solid var(--border-strong)', boxShadow: 'var(--shadow-lg)' }}>
-                  <div style={{ padding: '8px 12px', borderBottom: '1px solid var(--border)', marginBottom: 4 }}>
-                    <div style={{ fontWeight: 600, fontSize: 'var(--fs-sm)' }}>{user?.full_name || 'User'}</div>
-                    <div style={{ fontSize: 'var(--fs-xs)', color: 'var(--text-muted)' }}>{user?.email || ''}</div>
-                  </div>
-                  <button className="nav-item" onClick={() => navigate('/app/settings')} style={{ width: '100%', justifyContent: 'flex-start' }}>
-                    <Icons.Settings size={16} /><span className="nav-item-label">Settings</span>
-                  </button>
-                  <button className="nav-item" onClick={handleLogout} style={{ width: '100%', justifyContent: 'flex-start', color: 'var(--error)' }}>
-                    <Icons.LogOut size={16} /><span className="nav-item-label">Sign out</span>
-                  </button>
-                </div>
-              )}
+              <AnimatePresence>
+                {profileOpen && (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                    transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                    style={{ position: 'absolute', right: 0, top: 48, padding: 8, minWidth: 200, zIndex: 200, background: 'var(--bg-glass)', backdropFilter: 'blur(24px)', borderRadius: 'var(--r-lg)', border: '1px solid var(--border-strong)', boxShadow: 'var(--shadow-lg)' }}
+                  >
+                    <div style={{ padding: '8px 12px', borderBottom: '1px solid var(--border)', marginBottom: 4 }}>
+                      <div style={{ fontWeight: 600, fontSize: 'var(--fs-sm)' }}>{user?.full_name || 'User'}</div>
+                      <div style={{ fontSize: 'var(--fs-xs)', color: 'var(--text-muted)' }}>{user?.email || ''}</div>
+                    </div>
+                    <button className="nav-item" onClick={() => navigate('/app/settings')} style={{ width: '100%', justifyContent: 'flex-start' }}>
+                      <Icons.Settings size={16} /><span className="nav-item-label">Settings</span>
+                    </button>
+                    <button className="nav-item" onClick={handleLogout} style={{ width: '100%', justifyContent: 'flex-start', color: 'var(--error)' }}>
+                      <Icons.LogOut size={16} /><span className="nav-item-label">Sign out</span>
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </header>
@@ -189,13 +225,13 @@ export default function AppLayout() {
           <div className="footer-grid">
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <Logo size={28} animated={false} withText={false} />
-              <span className="footer-copy">© 2025 {APP_NAME}. All rights reserved.</span>
+              <span className="footer-copy">© 2026 {APP_NAME}. All rights reserved.</span>
             </div>
             <div className="footer-links">
-              <a className="footer-link" href="#">Privacy</a>
-              <a className="footer-link" href="#">Terms</a>
-              <a className="footer-link" href="#">Docs</a>
-              <a className="footer-link" href="#">Support</a>
+              <Link className="footer-link" to="/privacy">Privacy</Link>
+              <Link className="footer-link" to="/terms">Terms</Link>
+              <Link className="footer-link" to="/docs">Docs</Link>
+              <Link className="footer-link" to="/support">Support</Link>
             </div>
           </div>
         </footer>

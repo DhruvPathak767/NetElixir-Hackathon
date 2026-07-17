@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import Lenis from 'lenis';
 import {
   TrendingUp, BrainCircuit, SlidersHorizontal, BarChart3, UploadCloud,
   Sparkles, ShieldCheck, Zap, Target, ArrowRight, Check, Mail, MapPin, Phone,
@@ -45,6 +46,30 @@ export default function Landing() {
   const [contact, setContact] = useState({ name: '', email: '', message: '' });
   const [sending, setSending] = useState(false);
 
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      direction: 'vertical',
+      gestureDirection: 'vertical',
+      smooth: true,
+      mouseMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      infinite: false,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
   const scrollTo = (id) => {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -76,8 +101,11 @@ export default function Landing() {
               </StaggerItem>
               <StaggerItem>
                 <h1 className="hero-title">
-                  Forecast smarter.<br />
-                  <span className="text-gradient">Spend wiser.</span>
+                  <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>Forecast </motion.span>
+                  <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>smarter.</motion.span>
+                  <br />
+                  <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }} className="text-gradient">Spend </motion.span>
+                  <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }} className="text-gradient">wiser.</motion.span>
                 </h1>
               </StaggerItem>
               <StaggerItem>
@@ -116,32 +144,65 @@ export default function Landing() {
 
             {/* 3D visual */}
             <div className="hero-visual">
+              <div className="hero-aurora-container">
+                <div className="hero-aurora-blob hero-aurora-1" />
+                <div className="hero-aurora-blob hero-aurora-2" />
+                <div className="hero-aurora-blob hero-aurora-3" />
+              </div>
               <div className="orbit-ring r1" />
               <div className="orbit-ring r2" />
               <div className="orbit-ring r3" />
               <div className="orbit-dot d1" />
               <div className="orbit-dot d2" />
               <div className="orbit-dot d3" />
-              <div className="scene-3d">
-                <div className="cube-3d">
+              <motion.div 
+                className="scene-3d"
+                animate={{ y: [-10, 10, -10] }}
+                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                <div className="cube-glow" />
+                <motion.div 
+                  className="cube-3d"
+                  animate={{ rotateY: [0, 360], rotateX: [10, -10, 10] }}
+                  transition={{ rotateY: { duration: 25, repeat: Infinity, ease: 'linear' }, rotateX: { duration: 15, repeat: Infinity, ease: 'easeInOut' } }}
+                >
                   <div className="cube-face front"><TrendingUp size={40} /></div>
                   <div className="cube-face back"><BrainCircuit size={40} /></div>
                   <div className="cube-face right"><Target size={40} /></div>
                   <div className="cube-face left"><BarChart3 size={40} /></div>
                   <div className="cube-face top"><Zap size={40} /></div>
                   <div className="cube-face bottom"><SlidersHorizontal size={40} /></div>
-                </div>
-              </div>
-              <div className="data-badge b1"><span style={{ color: 'var(--success)' }}>+8.2%</span> ROAS</div>
-              <div className="data-badge b2"><TrendingUp size={12} style={{ color: 'var(--brand-400)' }} /> $245k forecast</div>
-              <div className="data-badge b3"><BrainCircuit size={12} style={{ color: 'var(--accent-400)' }} /> AI insight</div>
-              <div className="data-badge b4"><ShieldCheck size={12} style={{ color: 'var(--info)' }} /> Secure</div>
+                </motion.div>
+              </motion.div>
+              <motion.div className="data-badge b1" animate={{ y: [-5, 5, -5] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}><span style={{ color: 'var(--success)' }}>+8.2%</span> ROAS</motion.div>
+              <motion.div className="data-badge b2" animate={{ y: [-4, 4, -4] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}><TrendingUp size={12} style={{ color: 'var(--brand-400)' }} /> $245k forecast</motion.div>
+              <motion.div className="data-badge b3" animate={{ y: [-6, 6, -6] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 2 }}><BrainCircuit size={12} style={{ color: 'var(--accent-400)' }} /> AI insight</motion.div>
+              <motion.div className="data-badge b4" animate={{ y: [-3, 3, -3] }} transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}><ShieldCheck size={12} style={{ color: 'var(--info)' }} /> Secure</motion.div>
             </div>
+            
+            <motion.div 
+              className="scroll-indicator"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              transition={{ delay: 2, duration: 1 }}
+            >
+              <div className="scroll-mouse">
+                <div className="scroll-wheel" />
+              </div>
+              <span style={{ fontSize: 'var(--fs-xs)' }}>Scroll</span>
+            </motion.div>
           </div>
         </section>
 
         {/* ===== FEATURES ===== */}
-        <section className="landing-section" id="features">
+        <motion.section 
+          className="landing-section" 
+          id="features"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
           <div className="landing-section-inner">
             <div className="section-center" style={{ marginBottom: 48 }}>
               <div className="section-eyebrow"><Zap size={14} /> Features</div>
@@ -159,10 +220,18 @@ export default function Landing() {
               })}
             </StaggerContainer>
           </div>
-        </section>
+        </motion.section>
 
         {/* ===== ABOUT ===== */}
-        <section className="landing-section" id="about" style={{ background: 'var(--bg-elevated)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+        <motion.section 
+          className="landing-section" 
+          id="about" 
+          style={{ background: 'var(--bg-elevated)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
           <div className="landing-section-inner">
             <div className="about-grid">
               <div className="about-visual">
@@ -207,10 +276,17 @@ export default function Landing() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* ===== CONTACT ===== */}
-        <section className="landing-section" id="contact">
+        <motion.section 
+          className="landing-section" 
+          id="contact"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
           <div className="landing-section-inner">
             <div className="section-center" style={{ marginBottom: 48 }}>
               <div className="section-eyebrow"><Mail size={14} /> Contact Us</div>
@@ -260,10 +336,17 @@ export default function Landing() {
               </Card>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* ===== MARQUEE (PARTNERS) ===== */}
-        <section className="landing-section" style={{ padding: '60px 0', borderBottom: '1px solid var(--border)' }}>
+        <motion.section 
+          className="landing-section" 
+          style={{ padding: '60px 0', borderBottom: '1px solid var(--border)' }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 1 }}
+        >
           <div className="section-center" style={{ marginBottom: 32 }}>
             <div className="section-eyebrow" style={{ color: 'var(--text-muted)' }}>Trusted by fast-growing teams</div>
           </div>
@@ -284,10 +367,16 @@ export default function Landing() {
               ))}
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* ===== CTA BAND ===== */}
-        <section className="cta-band">
+        <motion.section 
+          className="cta-band"
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
           <div className="pub-footer-glow" style={{ top: '50%' }} />
           <div className="cta-band-inner">
             <h2>Ready to forecast smarter?</h2>
@@ -297,7 +386,7 @@ export default function Landing() {
               <Button variant="outline" size="lg" to="/login">Sign in</Button>
             </div>
           </div>
-        </section>
+        </motion.section>
       </div>
       <PublicFooter />
     </>
@@ -306,10 +395,14 @@ export default function Landing() {
 
 function FeatureCard({ icon: Icon, title, desc, delay }) {
   return (
-    <div className="card feature-card">
+    <motion.div 
+      className="card feature-card"
+      whileHover={{ y: -4, scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 300 }}
+    >
       <span className="feature-icon-3d"><Icon size={26} /></span>
       <h3>{title}</h3>
       <p>{desc}</p>
-    </div>
+    </motion.div>
   );
 }

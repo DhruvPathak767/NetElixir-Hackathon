@@ -178,3 +178,24 @@ export function ModelHealthCard({ version, score, rating = 'Excellent' }) {
     </Card>
   );
 }
+
+/**
+ * Beautiful Empty State for pages without data
+ */
+export function EmptyState({ title = 'No data available', message = 'There is currently no data to display.', icon: Icon = AlertTriangle, action }) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      className="empty-state"
+    >
+      <div className="empty-state-icon">
+        <Icon size={32} />
+      </div>
+      <div className="empty-state-title">{title}</div>
+      <div className="empty-state-desc">{message}</div>
+      {action && <div style={{ marginTop: 16 }}>{action}</div>}
+    </motion.div>
+  );
+}

@@ -6,13 +6,14 @@
  * Notifications + Appearance are preference toggles stored in localStorage per user.
  */
 import { useState } from 'react';
-import { User, Mail, Bell, Shield, Lock, Eye, EyeOff } from 'lucide-react';
+import { User, Mail, Bell, Shield, Lock, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import Card from '../components/Card.jsx';
 import Button from '../components/Button.jsx';
 import { useToast } from '../components/Toast.jsx';
 import { useTheme } from '../hooks/useTheme.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { StaggerContainer, StaggerItem } from '../components/StaggerContainer.jsx';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const NOTIF_KEY = (userId) => `fiq_notif_prefs_${userId}`;
 
@@ -39,6 +40,7 @@ export default function Settings() {
   const [oldPwd, setOldPwd] = useState('');
   const [newPwd, setNewPwd] = useState('');
   const [confirmPwd, setConfirmPwd] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   const [showOld, setShowOld] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [pwdLoading, setPwdLoading] = useState(false);
@@ -55,11 +57,14 @@ export default function Settings() {
   };
 
   const handleSaveProfile = () => {
-    // Update display name in local user state
-    if (displayName && updateUser) {
-      updateUser({ ...user, full_name: displayName, name: displayName });
-    }
-    toast.success('Profile saved successfully');
+    setIsSaving(true);
+    setTimeout(() => {
+      if (displayName && updateUser) {
+        updateUser({ ...user, full_name: displayName, name: displayName });
+      }
+      toast.success('Profile saved successfully');
+      setIsSaving(false);
+    }, 800);
   };
 
   const handleChangePassword = async () => {
@@ -145,7 +150,31 @@ export default function Settings() {
               </div>
             </div>
           </div>
-          <Button style={{ marginTop: 16 }} onClick={handleSaveProfile}>Save changes</Button>
+          <motion.button
+            className={`btn ${isSaving ? 'btn-success' : 'btn-primary'}`}
+            style={{ marginTop: 16, minWidth: 120, display: 'inline-flex', justifyContent: 'center' }}
+            onClick={handleSaveProfile}
+            disabled={isSaving}
+            animate={{ scale: isSaving ? 0.96 : 1 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          >
+            <AnimatePresence mode="wait">
+              {isSaving ? (
+                <motion.div
+                  key="check"
+                  initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
+                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                >
+                  <CheckCircle2 size={18} />
+                </motion.div>
+              ) : (
+                <motion.div key="text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  Save changes
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.button>
         </Card>
 
         {/* Appearance */}

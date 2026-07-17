@@ -23,7 +23,7 @@ export function ToastProvider({ children }) {
 
   const push = useCallback((type, message, duration = 4000) => {
     const id = ++idc;
-    setToasts((t) => [...t, { id, type, message }]);
+    setToasts((t) => [...t, { id, type, message, duration }]);
     if (duration) setTimeout(() => remove(id), duration);
     return id;
   }, [remove]);
@@ -55,6 +55,20 @@ export function ToastProvider({ children }) {
               <button className="toast-close" onClick={() => remove(t.id)} aria-label="Dismiss">
                 <X size={16} />
               </button>
+              <motion.div
+                initial={{ width: '100%' }}
+                animate={{ width: '0%' }}
+                transition={{ duration: t.duration ? t.duration / 1000 : 4, ease: 'linear' }}
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  height: 3,
+                  background: 'var(--text-primary)',
+                  opacity: 0.1,
+                  borderRadius: '0 0 var(--r-md) var(--r-md)'
+                }}
+              />
             </motion.div>
           ))}
         </AnimatePresence>

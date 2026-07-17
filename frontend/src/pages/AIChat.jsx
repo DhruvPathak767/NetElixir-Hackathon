@@ -222,7 +222,7 @@ export default function AIChat() {
                           </button>
                         )}
                       </div>
-                      <div style={{ fontSize: 8, color: 'var(--text-muted)', marginTop: 4, marginLeft: m.role === 'ai' ? 4 : 0, textAlign: m.role === 'user' ? 'right' : 'left' }}>
+                      <div className="chat-timestamp">
                         {m.time}
                       </div>
                     </div>
