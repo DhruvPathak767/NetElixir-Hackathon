@@ -15,9 +15,7 @@ export const NAV_ITEMS = [
   { path: '/app/ai-insights', label: 'AI Insights', icon: 'Sparkles' },
   { path: '/app/ai-chat', label: 'AI Chat', icon: 'MessageSquare' },
   { path: '/app/recommendation-history', label: 'AI Rec History', icon: 'History' },
-  { path: '/app/channel-analytics', label: 'Channel Analytics', icon: 'BarChart3' },
   { path: '/app/model-monitor', label: 'Model Monitor', icon: 'Activity' },
-  { path: '/app/system-health', label: 'System Health', icon: 'Server' },
   { path: '/app/reports', label: 'Reports', icon: 'FileText' },
   { path: '/app/settings', label: 'Settings', icon: 'Settings' },
 ];

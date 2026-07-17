@@ -59,6 +59,7 @@ class Settings(BaseSettings):
     
     # Keys
     SECRET_KEY: str = "9e884e93d938b81a812dfb15802111d4d8ef82c2198083811802a243b8110a30"
+    MISTRAL_API_KEY: str = ""
     
     # Google OAuth Settings
     GOOGLE_CLIENT_ID: str = ""
