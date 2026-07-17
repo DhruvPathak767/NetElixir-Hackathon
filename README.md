@@ -1,7 +1,7 @@
 # 🚀 ForecastIQ — Enterprise Marketing Spend Optimization
 
 <div align="center">
-  <img src="https://via.placeholder.com/1000x250/09090b/ffffff?text=ForecastIQ+Platform+Architecture" alt="ForecastIQ Banner" />
+  <img src="https://placehold.co/1000x250/09090b/ffffff.png?text=ForecastIQ+Platform+Architecture" alt="ForecastIQ Banner" />
   <br/>
   <p><b>State-of-the-Art Campaign Performance Forecast & Budget Allocation Engine</b></p>
 </div>
