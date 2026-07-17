@@ -67,7 +67,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from app.services.spend_discovery import discover_spend_columns, generate_and_save_mapping
+from app.services.spend_discovery import discover_spend_columns, generate_and_save_mapping, map_columns_dynamically
 from app.core.user_paths import UserPaths
 
 logger = logging.getLogger(__name__)
@@ -302,6 +302,7 @@ def _load_dataframe(file_path: Path) -> pd.DataFrame:
                 raise ValueError(
                     "The CSV was parsed but contains no data rows."
                 )
+            df = map_columns_dynamically(df)
             return df
 
         except ValueError:

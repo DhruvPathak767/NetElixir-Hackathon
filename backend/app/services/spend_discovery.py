@@ -125,3 +125,52 @@ def load_channel_mapping(paths: UserPaths = None) -> dict[str, Any]:
             "Microsoft_Spend": "Microsoft_Spend"
         }
     }
+
+
+def map_columns_dynamically(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Rename columns dynamically if standard marketing columns are missing.
+    """
+    col_map = {}
+    
+    # Mapping table for fallbacks:
+    fallbacks = {
+        "Date": ["date", "hire_date", "date_of_birth", "dob", "birth", "hired", "joined", "timestamp", "time"],
+        "Revenue": ["revenue", "salary", "income", "sales", "earnings"],
+        "Google_Spend": ["google_spend", "bonus", "spend", "cost", "budget", "investment", "ads"],
+        "Clicks": ["clicks", "experience_years", "experience", "years"],
+        "Impressions": ["impressions", "attendance_percentage", "attendance"],
+        "Conversions": ["conversions", "performance_rating", "performance"],
+        "Campaign_Type": ["campaign_type", "department", "dept", "job_title", "title"],
+        "Region": ["region", "office_city", "city", "state", "country"]
+    }
+    
+    # Map columns
+    for target, alts in fallbacks.items():
+        target_lower = target.lower().replace(" ", "_")
+        found = False
+        
+        # First check if the standard column name already exists in df
+        for col in df.columns:
+            if col.lower().replace(" ", "_") == target_lower:
+                col_map[col] = target
+                found = True
+                break
+                
+        if not found:
+            # Look for alternatives in the fallback list
+            for alt in alts:
+                alt_lower = alt.lower().replace(" ", "_")
+                for col in df.columns:
+                    if col.lower().replace(" ", "_") == alt_lower:
+                        col_map[col] = target
+                        found = True
+                        break
+                if found:
+                    break
+                    
+    # Rename columns in df
+    if col_map:
+        df = df.rename(columns=col_map)
+        
+    return df

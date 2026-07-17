@@ -62,6 +62,7 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+from app.services.spend_discovery import map_columns_dynamically
 
 from app.schemas.validation_schema import (
     DuplicateSummary,
@@ -241,6 +242,7 @@ def _load_dataframe(file_path: Path) -> pd.DataFrame:
             df = pd.read_csv(file_path, encoding=encoding, low_memory=False)
             if df.empty:
                 raise ValueError("The CSV was parsed but contains no data rows.")
+            df = map_columns_dynamically(df)
             return df
 
         except ValueError:

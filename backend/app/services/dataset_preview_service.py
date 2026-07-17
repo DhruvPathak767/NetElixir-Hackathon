@@ -67,7 +67,7 @@ from typing import Any
 
 import pandas as pd
 
-from app.services.spend_discovery import discover_spend_columns
+from app.services.spend_discovery import discover_spend_columns, map_columns_dynamically
 
 from app.schemas.dataset_schema import (
     CategoricalColumnStats,
@@ -225,7 +225,7 @@ def _load_dataframe(file_path: Path) -> pd.DataFrame:
                 raise ValueError(
                     "The CSV was parsed successfully but contains no data rows."
                 )
-
+            df = map_columns_dynamically(df)
             return df
 
         except ValueError:

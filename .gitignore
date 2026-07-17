@@ -44,10 +44,11 @@ backend/uploads/
 backend/processed/
 backend/models/
 backend/reports/
-uploads/
-processed/
-models/
-reports/
+/uploads/
+/processed/
+/models/
+/reports/
+
 
 # IDE and OS files
 .vscode/
