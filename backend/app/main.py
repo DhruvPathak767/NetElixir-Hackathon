@@ -59,7 +59,7 @@ logging.basicConfig(
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables
-load_dotenv(dotenv_path=BASE_DIR / ".env")
+load_dotenv(dotenv_path=BASE_DIR / ".env", override=True)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
