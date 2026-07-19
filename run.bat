@@ -34,10 +34,10 @@ for /f "tokens=*" %%i in ('npm -v') do set NPM_VER=%%i
 echo ✓ Node.js installation detected: %NODE_VER%
 echo ✓ npm installation detected: %NPM_VER%
 
-rem Clean up any existing processes on ports 8000 and 5174 to prevent binding errors
-echo Checking and cleaning up ports 8000 and 5174...
+rem Clean up any existing processes on ports 8000 and 5173 to prevent binding errors
+echo Checking and cleaning up ports 8000 and 5173...
 for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8000 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
-for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5174 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5173 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
 
 rem 3. Create backend virtual environment if missing
 if not exist "backend\.venv" (
@@ -77,7 +77,7 @@ echo Detecting ML model hosting requirements...
 echo ✓ ML Model is served directly by the FastAPI application; no separate process needed.
 
 rem 9. Start React frontend
-echo Starting React frontend on port 5174...
+echo Starting React frontend on port 5173...
 cd frontend
 start /B cmd /c "npm run dev > ..\frontend.log 2>&1"
 cd ..
@@ -114,6 +114,6 @@ set /p DUMMY=""
 echo.
 echo Shutting down background services...
 for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8000 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
-for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5174 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5173 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
 echo Services stopped. Goodbye!
 exit /b 0

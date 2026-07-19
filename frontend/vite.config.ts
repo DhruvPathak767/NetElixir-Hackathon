@@ -8,7 +8,7 @@ export default defineConfig({
     exclude: ['lucide-react'],
   },
   server: {
-    port: 5174,
+    port: 5173,
     strictPort: true,
     proxy: {
       '/api': {
