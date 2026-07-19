@@ -22,6 +22,23 @@ const INITIAL_SUGGESTIONS = [
   'Explain forecast confidence'
 ];
 
+// Helper to sanitize Markdown characters for display
+function sanitizeMarkdown(text) {
+  if (!text) return '';
+  return text
+    .replace(/^\s*---\s*$/gm, '')
+    .replace(/\*\*/g, '')
+    .replace(/__/g, '')
+    .replace(/^\s*###\s+/gm, '')
+    .replace(/^\s*##\s+/gm, '')
+    .replace(/^\s*#\s+/gm, '')
+    .replace(/\s*###\s*$/gm, '')
+    .replace(/\s*##\s*$/gm, '')
+    .replace(/\s*#\s*$/gm, '')
+    .replace(/\n\s*\n\s*\n/g, '\n\n')
+    .trim();
+}
+
 export default function AIChat() {
   const toast = useToast();
   const { user } = useAuth();
@@ -209,11 +226,11 @@ export default function AIChat() {
                     </span>
                     <div className="chat-bubble-container" style={{ position: 'relative' }}>
                       <div className="chat-bubble" style={{ whiteSpace: 'pre-line', paddingRight: m.role === 'ai' ? 36 : 12 }}>
-                        {m.text}
+                        {m.role === 'ai' ? sanitizeMarkdown(m.text) : m.text}
                         {m.role === 'ai' && (
                           <button
                             type="button"
-                            onClick={() => handleCopyText(m.text, i)}
+                            onClick={() => handleCopyText(sanitizeMarkdown(m.text), i)}
                             className="chat-copy-btn"
                             style={{ position: 'absolute', right: 8, bottom: 8, opacity: 0.6, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
                             title="Copy message"
