@@ -98,18 +98,24 @@ graph TD
 
 ## 🎯 Quick Start for Evaluators
 
-As per the **NetElixir Hackathon Submission Guide**, the project can be executed end-to-end with a single command. 
+ForecastIQ can be booted up end-to-end using a single launcher script. This launcher script automatically configures the environment, resolves dependencies, and spins up:
+- ✔ **Backend API** (FastAPI running on port 8000)
+- ✔ **Frontend UI** (React + Vite running on port 5174)
+- ✔ **ML Model** (integrated directly into the FastAPI application process; no separate process required)
 
+### Linux / macOS
 ```bash
-# 1. Clone the repository
-git clone <your-repository-url>
-cd <your-repo-name>
+# 1. Grant execute permissions
+chmod +x run.sh
 
-# 2. Install dependencies (Pinned versions)
-pip install -r requirements.txt
+# 2. Run the launcher
+./run.sh
+```
 
-# 3. Run the evaluation script
-./run.sh ./data ./pickle/model.pkl ./output/predictions.csv
+### Windows
+```cmd
+# Run the launcher
+run.bat
 ```
 
 ### 🧠 Mental Model of the Execution Pipeline
@@ -270,28 +276,76 @@ npm run dev
 ## 📁 Complete Repository Structure
 
 ```text
-Marketing-Forecast/
-├── run.sh                    # [HACKATHON] Entry point script for evaluators
-├── requirements.txt          # [HACKATHON] Pinned Python dependencies
-├── data/                     # [HACKATHON] Input data directory
-│   └── sample.csv            # Sample dataset for testing
-├── pickle/                   # [HACKATHON] Pickled model artifacts
-│   └── model.pkl             # Pre-trained LightGBM model
-├── src/                      # [HACKATHON] Core ML scripts
-│   ├── generate_features.py  # Feature engineering pipeline
-│   └── predict.py            # Inference engine
-├── backend/                  # Full-stack API (FastAPI)
-│   ├── app/                  # Application code (routes, core, models)
-│   ├── tests/                # Pytest suites
-│   └── requirements.txt      # Backend-specific dependencies
-├── frontend/                 # Full-stack Client (React + Vite)
-│   ├── src/                  # React components, pages, and context
-│   ├── public/               # Static assets
-│   ├── package.json          # Node dependencies
-│   └── tailwind.config.js    # UI styling configuration
-├── .gitignore                # Git exclusions
-└── README.md                 # Project documentation (You are here)
+ForecastIQ/
+├── run.sh                    # Linux/macOS launcher script
+├── run.bat                   # Windows launcher script
+├── README.md                 # Project documentation (You are here)
+├── backend/                  # FastAPI backend
+│   ├── app/                  # Application code
+│   │   ├── api/              # API router endpoints
+│   │   ├── core/             # Configuration & path management
+│   │   ├── database/         # Database sessions
+│   │   ├── models/           # SQLAlchemy database schemas
+│   │   ├── schemas/          # Pydantic request/response validation schemas
+│   │   ├── services/         # ML pipeline & application service handlers
+│   │   ├── database.py       # Engine creation
+│   │   ├── dependencies.py   # FastAPI dependency providers
+│   │   ├── logger.py         # Logging configuration
+│   │   ├── main.py           # Application entry point
+│   │   ├── middleware.py     # CORS & security middleware
+│   │   └── security.py       # Hashing and authentication utilities
+│   ├── logs/                 # System log output
+│   │   └── app.log           # Primary application runtime logs
+│   ├── models/               # Model checkpoints directory (User-isolated)
+│   │   └── {user_id}/        # Pickled models and training metadata
+│   ├── processed/            # Intermediary datasets (User-isolated)
+│   │   └── {user_id}/        # Cleaned datasets and feature Parquet/CSV files
+│   ├── reports/              # Executive reports (User-isolated)
+│   │   └── {user_id}/        # PDF, Excel, and CSV exported summaries
+│   ├── uploads/              # Raw data uploads (User-isolated)
+│   │   └── {user_id}/        # Uploaded source campaign files
+│   ├── requirements.txt      # Backend dependencies requirements
+│   ├── forecastiq.db         # SQLite runtime database
+│   └── .env                  # Environment configuration
+└── frontend/                 # React frontend client
+    ├── src/                  # React source tree
+    │   ├── components/       # Shared UI components
+    │   ├── constants/        # Fixed system constants
+    │   ├── context/          # React Context providers (Auth, Theme)
+    │   ├── hooks/            # Custom React hooks
+    │   ├── layouts/          # Page layout shells
+    │   ├── pages/            # Core dashboard viewpages
+    │   ├── services/         # API consumer services
+    │   ├── styles/           # CSS configuration
+    │   ├── App.tsx           # Router & top-level controller
+    │   ├── main.tsx          # Client entry point
+    │   └── index.css         # Styling system entry
+    ├── public/               # Static assets & public assets
+    ├── package.json          # Node dependency configuration
+    └── vite.config.ts        # Vite development compilation config
 ```
+
+# Data Storage Structure
+
+| Resource | Actual Location |
+|----------|-----------------|
+| Uploaded Raw Dataset | `backend/uploads/{user_id}/` |
+| Cleaned Dataset | `backend/processed/{user_id}/cleaned_data.csv` |
+| Processed Features | `backend/processed/{user_id}/features.csv` |
+| Trained LightGBM Model | `backend/models/{user_id}/revenue_model.pkl` |
+| Model Training Logs | `backend/models/{user_id}/training_log.json` |
+| Model Run Info | `backend/models/{user_id}/model_info.json` |
+| Model Metadata | `backend/models/{user_id}/model_metadata.json` |
+| Features Metadata | `backend/models/{user_id}/feature_columns.json` |
+| Standard Scaler pickle | `backend/models/{user_id}/feature_columns.pkl` |
+| Model Features checklist | `backend/models/{user_id}/model_features.json` |
+| Evaluation Metrics | `backend/models/{user_id}/metrics.json` |
+| AI Recommendations Log | `backend/models/{user_id}/recommendation_history.json` |
+| Reports Directory | `backend/reports/{user_id}/` |
+| Reports index metadata | `backend/reports/{user_id}/reports_index.json` |
+| System Logs | `backend/logs/app.log` |
+| Application Database | `backend/forecastiq.db` |
+| Environment File | `backend/.env` |
 
 ---
 
