@@ -1,32 +1,21 @@
 @echo off
-rem ==============================================================================
-rem ForecastIQ Hackathon Launcher Script (Windows)
-rem Purpose: One-command project startup for judges/evaluators.
-rem ==============================================================================
+setlocal enabledelayedexpansion
 
-cls
-echo ==================================================
-echo Initializing ForecastIQ Hackathon Services...
-echo ==================================================
-
-rem 1. Check Python installation
+:: --- System Checks ---
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ✗ Error: Python is not installed or not in PATH. Please install Python 3.10+.
+    echo ✗ Python not installed
     exit /b 1
 )
-for /f "tokens=*" %%i in ('python --version') do set PY_VER=%%i
-echo ✓ Python installation detected: %PY_VER%
 
-rem 2. Check Node.js and npm installation
 node -v >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ✗ Error: Node.js is not installed or not in PATH. Please install Node.js.
+    echo ✗ Node not installed
     exit /b 1
 )
-npm -v >nul 2>&1
-if %errorlevel% neq 0 (
-    echo ✗ Error: npm is not installed or not in PATH. Please install npm.
+
+if not exist "backend\requirements.txt" (
+    echo ✗ requirements.txt missing
     exit /b 1
 )
 for /f "tokens=*" %%i in ('node -v') do set NODE_VER=%%i
@@ -34,39 +23,59 @@ for /f "tokens=*" %%i in ('npm -v') do set NPM_VER=%%i
 echo ✓ Node.js installation detected: %NODE_VER%
 echo ✓ npm installation detected: %NPM_VER%
 
-rem Clean up any existing processes on ports 8000 and 5173 to prevent binding errors
-echo Checking and cleaning up ports 8000 and 5173...
+rem Clean up any existing processes on ports 8000 and 5174 to prevent binding errors
+echo Checking and cleaning up ports 8000 and 5174...
 for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8000 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
-for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5173 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5174 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
 
 rem 3. Create backend virtual environment if missing
 if not exist "backend\.venv" (
-    echo Creating backend virtual environment...
+    echo Creating virtual environment...
     python -m venv backend\.venv
 )
-echo ✓ Virtual environment verified
 
-rem 4. Activate virtual environment (using the python.exe path directly in subsequent commands)
-echo ✓ Virtual environment activated
-
-rem 5. Install backend requirements if needed
-echo Installing backend dependencies (this may take a few moments)...
-backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt >nul 2>&1
-echo ✓ Backend dependencies installed successfully
-
-rem 6. Install frontend dependencies if needed
-if not exist "frontend\node_modules" (
-    echo Installing frontend dependencies (this may take a few moments)...
-    cd frontend
-    call npm install >nul 2>&1
-    cd ..
+:: --- Install Backend Requirements ---
+backend\.venv\Scripts\python.exe -c "import fastapi, uvicorn, pydantic, sqlalchemy, sklearn, lightgbm" >nul 2>&1
+if %errorlevel% neq 0 (
+    echo Installing backend requirements...
+    backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
+) else (
+    echo ✓ Backend requirements already satisfied
 )
-echo ✓ Frontend dependencies installed successfully
 
-rem 7. Start FastAPI backend
-echo Starting FastAPI backend on port 8000...
+:: --- Frontend Setup ---
+cd frontend
+if exist "yarn.lock" (
+    set PM=yarn
+) else if exist "pnpm-lock.yaml" (
+    set PM=pnpm
+) else (
+    set PM=npm
+)
+
+if not exist "node_modules" (
+    echo Installing frontend dependencies with !PM!...
+    call !PM! install
+    if %errorlevel% neq 0 (
+        echo ✗ npm install failed
+        cd ..
+        exit /b 1
+    )
+)
+
+:: --- Detect Port ---
+for /f %%i in ('..\backend\.venv\Scripts\python.exe -c "import re; f=open('vite.config.ts').read(); m=re.search(r'port:\s*(\d+)', f); print(m.group(1) if m else 5173)"') do set FRONTEND_PORT=%%i
+cd ..
+
+:: --- Port Cleanup ---
+echo Cleaning up ports 8000 and %FRONTEND_PORT%...
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8000 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :%FRONTEND_PORT% ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
+
+:: --- Start Services ---
+echo Starting backend...
 cd backend
-start /B .venv\Scripts\uvicorn.exe app.main:app --port 8000 > ..\backend.log 2>&1
+start /B .venv\Scripts\uvicorn.exe app.main:app --reload > ..\logs\backend.log 2>&1
 cd ..
 
 rem 8. Detect whether the ML model requires a separate process
@@ -77,43 +86,81 @@ echo Detecting ML model hosting requirements...
 echo ✓ ML Model is served directly by the FastAPI application; no separate process needed.
 
 rem 9. Start React frontend
-echo Starting React frontend on port 5173...
+echo Starting React frontend on port 5174...
 cd frontend
-start /B cmd /c "npm run dev > ..\frontend.log 2>&1"
+start /B cmd /c "!PM! run dev > ..\logs\frontend.log 2>&1"
 cd ..
 
-rem Wait briefly for services to spin up and bind to their respective ports
-echo Waiting for services to become responsive...
-timeout /t 5 >nul
+:: --- Verify Backend ---
+echo Verifying backend startup...
+echo import urllib.request, time, sys > logs\check.py
+echo for _ in range^(30^): >> logs\check.py
+echo   try: >> logs\check.py
+echo     if urllib.request.urlopen^("http://localhost:8000/health", timeout=1^).status == 200: sys.exit^(0^) >> logs\check.py
+echo   except Exception: pass >> logs\check.py
+echo   time.sleep^(1^) >> logs\check.py
+echo sys.exit^(1^) >> logs\check.py
 
-rem 10. Print the requested evaluation success banner
-echo ========================================
-echo.
+backend\.venv\Scripts\python.exe logs\check.py
+set VERIFY_ERR=%errorlevel%
+del logs\check.py
+
+if %VERIFY_ERR% neq 0 (
+    echo ✗ Backend failed to start. Last log lines:
+    powershell -Command "Get-Content logs\backend.log -Tail 15"
+    goto cleanup
+)
+
+:: --- Verify Frontend ---
+echo Verifying frontend startup...
+echo import urllib.request, time, sys > logs\check.py
+echo for _ in range^(30^): >> logs\check.py
+echo   try: >> logs\check.py
+echo     urllib.request.urlopen^("http://localhost:%FRONTEND_PORT%", timeout=1^) >> logs\check.py
+echo     sys.exit^(0^) >> logs\check.py
+echo   except Exception: pass >> logs\check.py
+echo   time.sleep^(1^) >> logs\check.py
+echo sys.exit^(1^) >> logs\check.py
+
+backend\.venv\Scripts\python.exe logs\check.py
+set VERIFY_ERR=%errorlevel%
+del logs\check.py
+
+if %VERIFY_ERR% neq 0 (
+    echo ✗ Frontend failed to start. Last log lines:
+    powershell -Command "Get-Content logs\frontend.log -Tail 15"
+    goto cleanup
+)
+
+:: --- Status Banner ---
+echo =================================================
 echo ForecastIQ Hackathon Launcher
+echo =================================================
 echo.
-echo Backend:
-echo http://localhost:8000
+echo    ✓ Backend Running
+echo    http://localhost:8000
 echo.
-echo Swagger:
-echo http://localhost:8000/docs
+echo    ✓ Swagger
+echo    http://localhost:8000/docs
 echo.
-echo Frontend:
-echo http://localhost:5173
+echo    ✓ Frontend Running
+echo    http://localhost:%FRONTEND_PORT%
 echo.
-echo ML Model:
-echo Running
+echo    ✓ Logs
+echo    logs/backend.log
+echo    logs/frontend.log
 echo.
 echo Everything started successfully.
 echo.
-echo ========================================
+echo =================================================
 
 echo Press ENTER to stop services and exit.
 set /p DUMMY=""
 
 :cleanup
 echo.
-echo Shutting down background services...
+echo Shutting down services...
 for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8000 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
-for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5173 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5174 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
 echo Services stopped. Goodbye!
 exit /b 0
