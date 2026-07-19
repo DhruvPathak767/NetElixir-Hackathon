@@ -72,11 +72,26 @@ echo Cleaning up ports 8000 and %FRONTEND_PORT%...
 for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8000 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
 for /f "tokens=5" %%a in ('netstat -aon ^| findstr :%FRONTEND_PORT% ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
 
+:: --- Load Env ---
+if exist "backend\.env" (
+    copy backend\.env .env >nul 2>&1
+    for /f "usebackq tokens=1* delims==" %%A in ("backend\.env") do (
+        set "key=%%A"
+        set "val=%%B"
+        if not "!key:~0,1!"=="#" (
+            if not "!key!"=="" (
+                set "!key!=!val!"
+            )
+        )
+    )
+)
+
 :: --- Start Services ---
 echo Starting backend...
 cd backend
 start /B .venv\Scripts\uvicorn.exe app.main:app --reload > ..\logs\backend.log 2>&1
 cd ..
+
 
 rem 8. Detect whether the ML model requires a separate process
 rem In ForecastIQ, the LightGBM models are loaded on-demand and served directly
@@ -161,6 +176,7 @@ set /p DUMMY=""
 echo.
 echo Shutting down services...
 for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8000 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
-for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5174 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :%FRONTEND_PORT% ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
+if exist ".env" del .env >nul 2>&1
 echo Services stopped. Goodbye!
 exit /b 0

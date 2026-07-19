@@ -66,6 +66,11 @@ elif command -v fuser >/dev/null 2>&1; then
 fi
 
 # --- Startup Services ---
+if [ -f "backend/.env" ]; then
+    cp backend/.env .env 2>/dev/null || true
+    export $(grep -v '^#' backend/.env | xargs)
+fi
+
 echo "Starting backend..."
 cd backend
 ../backend/.venv/bin/uvicorn app.main:app --reload > ../logs/backend.log 2>&1 &
@@ -81,6 +86,7 @@ cd ..
 cleanup() {
     echo -e "\nShutting down services..."
     kill $BACKEND_PID $FRONTEND_PID 2>/dev/null || true
+    rm -f .env
     exit 0
 }
 trap cleanup SIGINT SIGTERM
